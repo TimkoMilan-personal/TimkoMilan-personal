@@ -1,8 +1,9 @@
 package com.warehouse.warehouse.controller;
 
-import com.warehouse.warehouse.dto.ProductDto;
+import com.warehouse.warehouse.dto.ProductCreateDto;
 import com.warehouse.warehouse.model.Product;
 import com.warehouse.warehouse.service.ProductService;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,30 +12,35 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
-    private final ProductService productSrvice;
 
-    public ProductController(ProductService productSrvice) {
-        this.productSrvice = productSrvice;
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
     public List<Product> getAll() {
-        return productSrvice.getAll();
+        return productService.getAll();
     }
 
-//    @GetMapping
-//    public List<Product> getByCategory(@RequestParam("categoryId")Long categoryId){
-//        return productSrvice.getByCategory(categoryId);
-//    }
+    @GetMapping("/category")
+    public List<Product> getByCategory(@RequestParam("categoryId") Long categoryId) {
+        return productService.getByCategory(categoryId);
+    }
 
     @PostMapping
-    public void addNew(@RequestBody ProductDto productDto) {
-        productSrvice.addNew(productDto);
+    public void addNew(@RequestBody ProductCreateDto productCreateDto) {
+        productService.addNew(productCreateDto);
     }
 
     @DeleteMapping
     public void removeItem(@RequestParam("itemId") Long itemId) {
-        productSrvice.removeItem(itemId);
+        productService.removeItem(itemId);
     }
 
+    @PutMapping
+    public Product updateItem(@RequestBody ProductCreateDto productCreateDto, @RequestParam("productId") Long productId) {
+        return productService.updateProduct(productId, productCreateDto);
+    }
 }

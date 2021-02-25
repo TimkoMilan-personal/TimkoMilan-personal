@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-public class ProductDto {
+public class ProductCreateDto {
 
     private  String name;
     private  String place;
@@ -60,6 +60,15 @@ public class ProductDto {
     }
 
     public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public ProductCreateDto(String name, String place, String idCode, String note, int count, Long categoryId) {
+        this.name = name;
+        this.place = place;
+        this.idCode = idCode;
+        this.note = note;
+        this.count = count;
         this.categoryId = categoryId;
     }
 }

@@ -23,10 +23,16 @@ public class CategoryController {
         return categoryService.getAll();
     }
 
-    @PostMapping("/new")
+    @PostMapping
     public void addNew(@RequestBody CategoryCreateDto categoryCreateDto) {
         categoryService.addNew(categoryCreateDto);
     }
+
+    @DeleteMapping
+    public void removeByCategoryId(@RequestParam("categoryId")Long categoryId){
+        categoryService.removeById(categoryId);
+    }
+
 
 
 }

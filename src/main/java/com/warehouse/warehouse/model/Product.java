@@ -28,9 +28,6 @@ public class Product {
     @Column(name = "count")
     private int count;
 
-    //    @Column(name = "vendor")
-//    private  Vendor vendor;
-
     @JsonIgnore
     @ManyToOne
     private Category category;
@@ -89,5 +86,18 @@ public class Product {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", place='" + place + '\'' +
+                ", idCode='" + idCode + '\'' +
+                ", note='" + note + '\'' +
+                ", count=" + count +
+                ", category=" + category +
+                '}';
     }
 }
