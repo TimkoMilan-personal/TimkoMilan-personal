@@ -30,4 +30,21 @@ public class OrdersServiceImpl implements OrdersService {
     public List<Orders> getNotOrdered() {
         return orderRepository.findByisOrderedFalse();
     }
+
+    @Override
+    public List<Orders> findByProductId(Long productId) {
+        return orderRepository.findByproductId(productId);
+    }
+
+    @Override
+    public void removeOrderById(Long orderId) {
+        orderRepository.deleteById(orderId);
+    }
+
+    @Override
+    public void saveOrder(Orders orders) {
+        orderRepository.save(orders);
+    }
+
+
 }

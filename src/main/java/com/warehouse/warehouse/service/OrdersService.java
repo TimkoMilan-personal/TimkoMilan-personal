@@ -11,4 +11,10 @@ public interface OrdersService {
     List<Orders> getOrdered();
 
     List<Orders> getNotOrdered();
+
+    List<Orders> findByProductId(Long orderId);
+
+    void removeOrderById(Long orderId);
+
+    void saveOrder(Orders orders);
 }

@@ -9,6 +9,7 @@ import com.warehouse.warehouse.repository.CategoryRepository;
 import com.warehouse.warehouse.repository.OrderRepository;
 import com.warehouse.warehouse.repository.ProductRepository;
 import com.warehouse.warehouse.util.ProductUtil;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -18,21 +19,21 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
-    private final OrderRepository orderRepository;
+    private final CategoryService categoryService;
+    private final OrdersService ordersService;
     private final ProductUtil productUtil;
 
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, OrderRepository orderRepository, ProductUtil productUtil) {
+    public ProductServiceImpl(ProductRepository productRepository, @Lazy CategoryService categoryService, OrdersService ordersService, ProductUtil productUtil) {
         this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-        this.orderRepository = orderRepository;
+        this.categoryService = categoryService;
+        this.ordersService = ordersService;
         this.productUtil = productUtil;
     }
 
 
     @Override
     public void addNew(ProductCreateDto productCreateDto) {
-        Category category = categoryRepository.getOne(productCreateDto.getCategoryId());
+        Category category = categoryService.findById(productCreateDto.getCategoryId());
         Product product = productUtil.fromDtoToObject(productCreateDto);
         product.setCategory(category);
         productRepository.save(product);
@@ -43,9 +44,9 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.getOne(productId);
         product.setCount(product.getCount() + amount);
         productRepository.save(product);
-        List<Orders> ordersList = orderRepository.findByproductId(productId);
-        if (ordersList.size()!= 0){
-            orderRepository.delete(ordersList.get(0));
+        List orders = ordersService.findByProductId(productId);
+        if (orders.size() != 0) {
+            ordersService.removeOrderById(productId);
         }
     }
 
@@ -77,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
             product.setCount(product.getCount() - soldProduct.getCount());
             productRepository.save(product);
         }
-        needsToBeOrdered(product,soldProduct);
+        needsToBeOrdered(product, soldProduct);
     }
 
     @Override
@@ -90,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
         return product.getCount() > 0 && product.getCount() >= count;
     }
 
-    private boolean needsToBeOrdered(Product product,SoldProductDto productDto) {
+    private boolean needsToBeOrdered(Product product, SoldProductDto productDto) {
         // TODO changed to value from properties file/ Check if record will not be duplicated
         if (product.getCount() < 5 && !isInListOrders(productDto.getProductId())) {
 
@@ -100,15 +101,15 @@ public class ProductServiceImpl implements ProductService {
             orders.setProductId(productDto.getProductId());
             orders.setCreateRecordDate(date);
             orders.setOrdered(false);
-            orderRepository.save(orders);
+            ordersService.saveOrder(orders);
             return true;
         } else {
             return false;
         }
     }
 
-    private boolean isInListOrders(Long productId){
-        List<Orders> ordersList = orderRepository.findByproductId(productId);
+    private boolean isInListOrders(Long productId) {
+        List<Orders> ordersList = ordersService.findByProductId(productId);
         return ordersList.size() != 0;
     }
 

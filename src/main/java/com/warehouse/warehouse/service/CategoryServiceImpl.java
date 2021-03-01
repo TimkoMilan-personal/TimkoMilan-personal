@@ -15,12 +15,12 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final ProductRepository productRepository;
+    private final ProductService productService;
     private final ProductUtil productUtil;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, ProductUtil productUtil) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, ProductService productService, ProductUtil productUtil) {
         this.categoryRepository = categoryRepository;
-        this.productRepository = productRepository;
+        this.productService = productService;
         this.productUtil = productUtil;
     }
 
@@ -39,12 +39,17 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void removeById(Long categoryId) {
         if (categoryId!=1L){
-            List<Product> products =  productRepository.findProductsByCategoryId(categoryId);
+            List<Product> products =  productService.getByCategory(categoryId);
             Optional<Category> defaultCategory = categoryRepository.findById(1L);
             for (Product product : products) {
                 product.setCategory(defaultCategory.get());
             }
             categoryRepository.deleteById(categoryId);
         }//Status code cannot remove defaultCategory
+    }
+
+    @Override
+    public Category findById(Long categoryId) {
+        return categoryRepository.getOne(categoryId);
     }
 }

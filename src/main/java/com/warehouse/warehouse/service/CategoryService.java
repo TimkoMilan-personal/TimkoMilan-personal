@@ -12,4 +12,7 @@ public interface CategoryService {
     void addNew(CategoryCreateDto categoryCreateDto);
 
     void removeById(Long categoryId);
+
+    Category findById(Long categoryId);
+
 }
