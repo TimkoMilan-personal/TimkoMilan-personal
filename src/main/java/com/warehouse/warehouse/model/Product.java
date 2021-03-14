@@ -1,12 +1,17 @@
 package com.warehouse.warehouse.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "PRODUCT")
-public class Product {
+@Lazy
+public class Product{
 
     @Id
     @Column(name = "id")
@@ -31,6 +36,14 @@ public class Product {
     @JsonIgnore
     @ManyToOne
     private Category category;
+
+    @JsonCreator
+    public Product(@JsonProperty("id") Long id) {
+        this.id = id;
+    }
+
+    public Product() {
+    }
 
     public void setId(Long id) {
         this.id = id;

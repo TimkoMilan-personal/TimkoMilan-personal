@@ -4,6 +4,7 @@ import com.warehouse.warehouse.dto.ProductCreateDto;
 import com.warehouse.warehouse.model.Product;
 import com.warehouse.warehouse.service.ProductService;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,13 +26,16 @@ public class ProductController {
     }
 
     @GetMapping("/category")
-    public List<Product> getByCategory(@RequestParam("categoryId") Long categoryId) {
-        return productService.getByCategory(categoryId);
+    public ResponseEntity<List<Product>> getByCategory(@RequestParam("categoryId") Long categoryId) {
+        List<Product> byCategory = productService.getByCategory(categoryId);
+        return ResponseEntity.ok(byCategory);
     }
 
     @PostMapping
-    public void addNew(@RequestBody ProductCreateDto productCreateDto) {
-        productService.addNew(productCreateDto);
+    public ResponseEntity<Product> addNew(@RequestBody ProductCreateDto productCreateDto) {
+        Product product = productService.addNew(productCreateDto);
+        return ResponseEntity.ok(product);
+
     }
 
     @DeleteMapping

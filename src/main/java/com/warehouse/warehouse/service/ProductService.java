@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface ProductService {
 
-    void addNew(ProductCreateDto productCreateDto);
+    Product addNew(ProductCreateDto productCreateDto);
 
-    void addAmount(Long productId, int amount);
+    Product addAmount(Long productId, int amount);
 
     List<Product> getAll();
 

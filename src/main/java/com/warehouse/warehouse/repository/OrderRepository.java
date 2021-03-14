@@ -11,5 +11,7 @@ public interface OrderRepository extends JpaRepository<Orders,Long> {
     List<Orders> findByisOrderedTrue();
     List<Orders> findByisOrderedFalse();
     List<Orders> findByproductId(Long productId);
+    List<Orders> deleteByproductId(Long productId);
+
 
 }

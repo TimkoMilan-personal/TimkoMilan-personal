@@ -7,11 +7,13 @@ import com.warehouse.warehouse.repository.CategoryRepository;
 import com.warehouse.warehouse.repository.ProductRepository;
 import com.warehouse.warehouse.util.ProductUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
@@ -30,10 +32,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void addNew(CategoryCreateDto categoryCreateDto) {
+    public Category addNew(CategoryCreateDto categoryCreateDto) {
         Category category = new Category();
         category.setName(categoryCreateDto.getName());
-        categoryRepository.save(category);
+        return categoryRepository.save(category);
     }
 
     @Override

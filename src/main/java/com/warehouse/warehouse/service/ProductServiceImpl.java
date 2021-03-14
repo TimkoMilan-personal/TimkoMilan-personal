@@ -5,17 +5,17 @@ import com.warehouse.warehouse.dto.SoldProductDto;
 import com.warehouse.warehouse.model.Category;
 import com.warehouse.warehouse.model.Orders;
 import com.warehouse.warehouse.model.Product;
-import com.warehouse.warehouse.repository.CategoryRepository;
-import com.warehouse.warehouse.repository.OrderRepository;
 import com.warehouse.warehouse.repository.ProductRepository;
 import com.warehouse.warehouse.util.ProductUtil;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -32,22 +32,23 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public void addNew(ProductCreateDto productCreateDto) {
+    public Product addNew(ProductCreateDto productCreateDto) {
         Category category = categoryService.findById(productCreateDto.getCategoryId());
         Product product = productUtil.fromDtoToObject(productCreateDto);
         product.setCategory(category);
-        productRepository.save(product);
+        return productRepository.save(product);
     }
 
     @Override
-    public void addAmount(Long productId, int amount) {
+    public Product addAmount(Long productId, int amount) {
         Product product = productRepository.getOne(productId);
         product.setCount(product.getCount() + amount);
-        productRepository.save(product);
+        Product updatedProduct=productRepository.save(product);
         List orders = ordersService.findByProductId(productId);
-        if (orders.size() != 0) {
+        if (!orders.isEmpty()) {
             ordersService.removeOrderById(productId);
         }
+        return updatedProduct;
     }
 
     @Override
@@ -92,7 +93,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private boolean needsToBeOrdered(Product product, SoldProductDto productDto) {
-        // TODO changed to value from properties file/ Check if record will not be duplicated
         if (product.getCount() < 5 && !isInListOrders(productDto.getProductId())) {
 
             Date date = new Date();

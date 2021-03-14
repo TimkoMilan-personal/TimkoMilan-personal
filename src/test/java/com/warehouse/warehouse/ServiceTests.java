@@ -3,6 +3,7 @@ package com.warehouse.warehouse;
 import com.warehouse.warehouse.dto.CategoryCreateDto;
 import com.warehouse.warehouse.dto.ProductCreateDto;
 import com.warehouse.warehouse.dto.SoldProductDto;
+import com.warehouse.warehouse.model.Category;
 import com.warehouse.warehouse.model.Product;
 import com.warehouse.warehouse.service.CategoryService;
 import com.warehouse.warehouse.service.OrdersService;
@@ -13,17 +14,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class WarehouseApplicationTests {
+@SpringBootTest
+public class ServiceTests {
 
     @Autowired
     CategoryService categoryService;
@@ -31,14 +31,15 @@ class WarehouseApplicationTests {
     ProductService productService;
     @Autowired
     OrdersService ordersService;
-    @Autowired
-    TestRestTemplate restTemplate;
+
+    static Category categoryOne;
+    static Category categoryTwo;
 
     static Product productOne;
-	static Product productTwo;
-	static Product productThree;
-	static Product productFour;
-	static Product productFive;
+    static Product productTwo;
+    static Product productThree;
+    static Product productFour;
+    static Product productFive;
 
     @Test
     @Order(1)
@@ -51,12 +52,12 @@ class WarehouseApplicationTests {
         CategoryCreateDto secondCategory = new CategoryCreateDto();
         secondCategory.setName("FirstCat");
 
-        categoryService.addNew(firstCategory);
-        categoryService.addNew(secondCategory);
+        categoryOne=categoryService.addNew(firstCategory);
+        categoryTwo=categoryService.addNew(secondCategory);
 
         assertEquals(2, categoryService.getAll().size());
 
-        ProductCreateDto firstProduct = new ProductCreateDto("First Product", "L34", "123321", "Fregile", 15, (long) 1);
+        ProductCreateDto firstProduct = new ProductCreateDto("First Product", "L34", "123321", "Fregile", 10, (long) 1);
         ProductCreateDto secondProduct = new ProductCreateDto("Second Product", "L343", "44334", "Fregile", 10, (long) 2);
         ProductCreateDto thirdProduct = new ProductCreateDto("Third Product", "A14", "9909", "Fregile", 10, (long) 2);
 
@@ -67,27 +68,47 @@ class WarehouseApplicationTests {
         assertEquals(3, productService.getAll().size());
 
     }
-
     @Test
     @Order(2)
-    void createProduct() {
-        ProductCreateDto request = new ProductCreateDto("Table", "L231", "0099898", "Fregile", 13, 1L);
-        ProductCreateDto secondRequest = new ProductCreateDto("Table wooden", "L231", "0099898", "Fregile", 15, 1L);
-        ResponseEntity responseEntity = restTemplate.postForEntity("/product", request, ProductCreateDto.class);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        ResponseEntity secondResponseEntity = restTemplate.postForEntity("/product", secondRequest, ProductCreateDto.class);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    void findByCategoryId() {
+        assertEquals(1, productService.getByCategory(categoryOne.getId()).size());
+        assertEquals(2, productService.getByCategory(categoryTwo.getId()).size());
 
-        System.out.println(responseEntity.toString());
     }
 
     @Test
     @Order(3)
-    void restGetProducts() {
-        ResponseEntity<ProductCreateDto[]> responseEntity = restTemplate.getForEntity("/product", ProductCreateDto[].class);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(5, responseEntity.getBody().length);
+    @Transactional
+    void buyProductAndCreateOrder() {
+        SoldProductDto soldProductDto = new SoldProductDto();
+        soldProductDto.setProductId(productOne.getId());
+        soldProductDto.setCount(8);
+        productService.soldProduct(soldProductDto);
+
+        assertEquals(1, ordersService.getAll().size());
+
+        productService.addAmount(productOne.getId(), 10);
+
+        assertEquals(12, productService.getById(productOne.getId()).getCount());
+        assertEquals(0, ordersService.getAll().size());
+
     }
 
+    @Test
+    @Order(4)
+    void removeProduct() {
+        productService.removeItem(productTwo.getId());
+        assertEquals(2, productService.getAll().size());
+        assertEquals(1, productService.getByCategory(categoryTwo.getId()).size());
 
+    }
+
+    @Test
+    @Order(5)
+    void removeCategory() {
+        productService.removeItem(productOne.getId());
+        categoryService.removeById(categoryOne.getId());
+        assertEquals(2, categoryService.getAll().size());
+
+    }
 }
