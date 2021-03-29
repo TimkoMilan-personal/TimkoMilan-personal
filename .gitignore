@@ -37,3 +37,7 @@ build/
 /warehouse.iml
 /mvnw.cmd
 /mvnw
+/.mvn/wrapper/
+/mvnw
+/mvnw.cmd
+/.mvn/wrapper/

@@ -43,8 +43,8 @@ class WarehouseApplicationTests {
     @Test
     @Order(1)
     void createProductAndCategory() {
-        assertEquals(0, categoryService.getAll().size());
-        assertEquals(0, productService.getAll().size());
+        assertEquals(2, categoryService.getAll().size());
+        assertEquals(1, productService.getAll().size());
 
         CategoryCreateDto firstCategory = new CategoryCreateDto();
         firstCategory.setName("FirstCat");
@@ -54,7 +54,7 @@ class WarehouseApplicationTests {
         categoryService.addNew(firstCategory);
         categoryService.addNew(secondCategory);
 
-        assertEquals(2, categoryService.getAll().size());
+        assertEquals(4, categoryService.getAll().size());
 
         ProductCreateDto firstProduct = new ProductCreateDto("First Product", "L34", "123321", "Fregile", 15, (long) 1);
         ProductCreateDto secondProduct = new ProductCreateDto("Second Product", "L343", "44334", "Fregile", 10, (long) 2);
@@ -64,7 +64,7 @@ class WarehouseApplicationTests {
         productTwo = productService.addNew(secondProduct);
         productThree=productService.addNew(thirdProduct);
 
-        assertEquals(3, productService.getAll().size());
+        assertEquals(4, productService.getAll().size());
 
     }
 
@@ -86,7 +86,7 @@ class WarehouseApplicationTests {
     void restGetProducts() {
         ResponseEntity<ProductCreateDto[]> responseEntity = restTemplate.getForEntity("/product", ProductCreateDto[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(5, responseEntity.getBody().length);
+        assertEquals(6, responseEntity.getBody().length);
     }
 
 

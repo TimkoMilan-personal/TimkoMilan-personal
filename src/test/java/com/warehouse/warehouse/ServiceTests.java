@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ServiceTests {
 
     @Autowired
@@ -58,7 +58,7 @@ public class ServiceTests {
         assertEquals(2, categoryService.getAll().size());
 
         ProductCreateDto firstProduct = new ProductCreateDto("First Product", "L34", "123321", "Fregile", 10, (long) 1);
-        ProductCreateDto secondProduct = new ProductCreateDto("Second Product", "L343", "44334", "Fregile", 10, (long) 2);
+        ProductCreateDto secondProduct = new ProductCreateDto("Second Product", "L343", "44334", "Fregile", 10, (long)2);
         ProductCreateDto thirdProduct = new ProductCreateDto("Third Product", "A14", "9909", "Fregile", 10, (long) 2);
 
         productOne = productService.addNew(firstProduct);

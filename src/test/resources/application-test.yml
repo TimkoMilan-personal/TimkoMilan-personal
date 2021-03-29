@@ -22,4 +22,5 @@ spring:
       ddl-auto: none
   lifecycle:
     timeout-per-shutdown-phase: 20s
-
+  flyway:
+    enabled: false

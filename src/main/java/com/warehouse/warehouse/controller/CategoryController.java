@@ -17,7 +17,6 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-
     @GetMapping
     public List<Category> getAll() {
         return categoryService.getAll();
