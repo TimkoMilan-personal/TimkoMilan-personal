@@ -18,12 +18,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final ProductService productService;
-    private final ProductUtil productUtil;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, ProductService productService, ProductUtil productUtil) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ProductService productService, ProductUtil productUtil) {
         this.categoryRepository = categoryRepository;
         this.productService = productService;
-        this.productUtil = productUtil;
     }
 
     @Override

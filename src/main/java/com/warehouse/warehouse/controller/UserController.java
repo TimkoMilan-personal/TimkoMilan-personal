@@ -23,12 +23,10 @@ import java.util.Optional;
 public class UserController {
 
     private final UserAccessServiceImpl userAccessService;
-    private final HttpServletRequest request;
 
     @Autowired
-    public UserController(UserAccessServiceImpl userAccessService, HttpServletRequest request) {
+    public UserController(UserAccessServiceImpl userAccessService) {
         this.userAccessService = userAccessService;
-        this.request = request;
     }
 
     @PostMapping("/login")

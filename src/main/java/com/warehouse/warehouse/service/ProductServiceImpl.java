@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.getOne(productId);
         product.setCount(product.getCount() + amount);
         Product updatedProduct=productRepository.save(product);
-        List orders = ordersService.findByProductId(productId);
+        List<Orders> orders = ordersService.findByProductId(productId);
         if (!orders.isEmpty()) {
             ordersService.removeOrderById(productId);
         }
@@ -68,7 +68,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(Long productId, ProductCreateDto productCreateDto) {
-//        Optional<Product> products = productRepository.findById(productId);
         return null;
     }
 

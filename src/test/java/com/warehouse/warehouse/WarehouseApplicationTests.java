@@ -2,21 +2,18 @@ package com.warehouse.warehouse;
 
 import com.warehouse.warehouse.dto.CategoryCreateDto;
 import com.warehouse.warehouse.dto.ProductCreateDto;
-import com.warehouse.warehouse.dto.SoldProductDto;
 import com.warehouse.warehouse.model.Product;
 import com.warehouse.warehouse.service.CategoryService;
 import com.warehouse.warehouse.service.OrdersService;
 import com.warehouse.warehouse.service.ProductService;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -39,6 +36,8 @@ class WarehouseApplicationTests {
 	static Product productThree;
 	static Product productFour;
 	static Product productFive;
+
+
 
     @Test
     @Order(1)
@@ -78,7 +77,6 @@ class WarehouseApplicationTests {
         ResponseEntity secondResponseEntity = restTemplate.postForEntity("/product", secondRequest, ProductCreateDto.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        System.out.println(responseEntity.toString());
     }
 
     @Test
@@ -87,7 +85,9 @@ class WarehouseApplicationTests {
         ResponseEntity<ProductCreateDto[]> responseEntity = restTemplate.getForEntity("/product", ProductCreateDto[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(6, responseEntity.getBody().length);
+
     }
+
 
 
 }

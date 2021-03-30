@@ -11,8 +11,6 @@ public class WarehouseApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WarehouseApplication.class, args);
-
-
 	}
 
 }

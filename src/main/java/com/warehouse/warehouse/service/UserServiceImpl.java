@@ -17,7 +17,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users createUser(Users users) {
-        Set<Role> roles = new HashSet<>();
 
         return userRepository.save(users);
     }
