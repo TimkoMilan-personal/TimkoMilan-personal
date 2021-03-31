@@ -90,7 +90,11 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.getOne(productId);
         return product.getCount() > 0 && product.getCount() >= count;
     }
-
+    /**
+     * method check Product amount after sold, if is less than configure that
+     * system create new record with Orders.
+     * return Product with generated value for ID
+     */
     private boolean needsToBeOrdered(Product product, SoldProductDto productDto) {
         if (product.getCount() < 5 && !isInListOrders(productDto.getProductId())) {
 
